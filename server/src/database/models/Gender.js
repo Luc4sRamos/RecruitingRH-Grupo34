@@ -17,8 +17,8 @@ module.exports = (sequelize, dataTypes) => {
 
     Gender.associate = models => {
         Gender.hasMany(models.Applicant, {
-            as: "genders",
-            foreingKey: "gender_id"
+            as: "applicants",
+            foreignKey: "gender_id"
         })
 
     }

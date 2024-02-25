@@ -20,14 +20,10 @@ module.exports = (sequelize, dataTypes) => {
     })
 
     Profession.associate = models => {
-        Profession.belongsToMany(models.Applicant, {
-            as: "applicants",
-            through: "applicant_profession",
-            foreignKey: "profession_id",
-            otherKey: "applicant_id",
-            timestamps: false
+        Profession.hasMany(models.ApplicantProfession, {
+            as: "applicant_profession",
+            foreignKey: "profession_id"
         })
-
     }
 
     return Profession

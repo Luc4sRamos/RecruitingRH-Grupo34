@@ -33,7 +33,7 @@ module.exports = (sequelize, dataTypes) => {
             allowNull: false
         },
         birthdate: {
-            type: dataTypes.DATE,
+            type: dataTypes.DATEONLY,
             allowNull: false
         },
         gender_id: {
@@ -54,17 +54,14 @@ module.exports = (sequelize, dataTypes) => {
     })
 
     Applicant.associate = models => {
-        Applicant.belongsToMany(models.Profession, {
-            as: "professions",
-            through: "applicant_profession",
-            foreignKey: "applicant_id",
-            otherKey: "profession_id",
-            timestamps: false
+        Applicant.belongsTo(models.Gender, {
+            as: "gender",
+            foreignKey: "gender_id"
         })
 
-        Applicant.belongsTo(models.Gender, {
-            as: "genders",
-            foreingKey: "gender_id"
+        Applicant.hasMany(models.ApplicantProfession, {
+            as: "applicant_profession",
+            foreignKey: "applicant_id"
         })
     }
 

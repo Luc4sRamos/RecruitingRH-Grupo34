@@ -4,5 +4,7 @@ const controller = require("../controllers/professionsController")
 
 // API de profesiones
 router.get("/", controller.list)
+router.get("/:id", controller.detail)
+
 
 module.exports = router
