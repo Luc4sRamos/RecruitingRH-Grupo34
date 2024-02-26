@@ -7,13 +7,11 @@ import { Main } from './components/Main/Main';
 function App() {
 
   return (
-    <body>
       <div className='dashboard'>
-        <Search />
         <Header />
+        <Search />
         <Main />
       </div>
-    </body>
   )
 }
 
