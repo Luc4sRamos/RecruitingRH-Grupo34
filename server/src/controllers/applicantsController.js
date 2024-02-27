@@ -9,7 +9,7 @@ const controller = {
             let professionName
             const applicantsList = []
             for (const applicant of applicants) {
-                const { name, lastName, dni, email, phoneNumber, urlLinkedin, birthdate, gender_id, photo, applicant_profession } = applicant
+                const { id, name, lastName, dni, email, phoneNumber, urlLinkedin, birthdate, gender_id, photo, applicant_profession } = applicant
 
                 for (const { profession } of applicant_profession) {
                     if (profession) {
@@ -18,6 +18,7 @@ const controller = {
                 }
 
                 applicantsList.push({
+                    id,
                     name,
                     lastName,
                     dni,
