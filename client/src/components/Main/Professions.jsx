@@ -1,4 +1,15 @@
-export function Professions() {
+import { useEffect, useState } from "react"
+
+
+export function  Professions () {
+
+    const [professions, setProfessions] = useState()
+
+    useEffect(() => {
+        fetch("http://localhost:3000/professions")
+            .then(res => res.json())
+            .then(data => setProfessions(data.data.professionsList))
+    }, [])
 
     return (
         <>
@@ -10,10 +21,14 @@ export function Professions() {
                             aria-current="true">
                             Listado de Profesiones
                         </h4>
-                        <button type="button" className="list-group-item list-group-item-action text-center">Administrador</button>
-                        <button type="button" className="list-group-item list-group-item-action text-center">Técnico de sonido</button>
-                        <button type="button" className="list-group-item list-group-item-action text-center">Profesor</button>
-                        <button type="button" className="list-group-item list-group-item-action text-center">Linguista</button>
+                        {
+                            Array.isArray(professions) && professions.map((profession, i) => 
+                                <button key={profession.name + i} type="button" className="list-group-item list-group-item-action text-center">
+                                    {profession.name}
+                                </button>
+                            )
+                        }
+
                     </div>
                 </section>
             {/* <!--Fin sección profesiones--> */}

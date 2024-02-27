@@ -7,7 +7,7 @@ export function Person({image, name, lastName, profession}) {
         <>
             <div className="person-box shadow p-3 mb-5 bg-body-tertiary rounded">
                 <div className="box-avatar">
-                    <img src={image} alt="Gloria"></img>    
+                    <img src={`/src/assets/img/${image}`} alt="Gloria"></img>    
                 </div>
                 <div className="box-bio">
                     <h2 className="bio-name">{name} {lastName}</h2>

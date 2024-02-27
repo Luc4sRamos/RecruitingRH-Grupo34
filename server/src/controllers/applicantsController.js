@@ -3,8 +3,33 @@ const controller = {
     list: async (req, res) => {
         try {
             const applicants = await Applicant.findAll({
-                include: ["gender"]
+                include: ["gender", { association:"applicant_profession", include: ["profession"]}]
             })
+
+            let professionName
+            const applicantsList = []
+            for (const applicant of applicants) {
+                const { name, lastName, dni, email, phoneNumber, urlLinkedin, birthdate, gender_id, photo, applicant_profession } = applicant
+
+                for (const { profession } of applicant_profession) {
+                    if (profession) {
+                        professionName = profession.name
+                    }
+                }
+
+                applicantsList.push({
+                    name,
+                    lastName,
+                    dni,
+                    email,
+                    phoneNumber,
+                    urlLinkedin,
+                    birthdate,
+                    gender_id,
+                    photo,
+                    profession: professionName
+                })
+            }
             return res.status(200).json({
                 meta: {
                     status: 200,
@@ -13,7 +38,7 @@ const controller = {
                 },
                 data: {
                     count: applicants.length,
-                    applicants
+                    applicantsList
                 } 
             })
         } catch (error) {
@@ -36,10 +61,17 @@ const controller = {
                 photo 
             })
 
-            for (const profession of professions) {
+            if (Array.isArray(professions)) {
+                for (const profession of professions) {
+                    await ApplicantProfession.create({
+                        applicant_id: applicant.id,
+                        profession_id: profession
+                    })
+                }
+            } else {
                 await ApplicantProfession.create({
                     applicant_id: applicant.id,
-                    profession_id: profession
+                    profession_id: professions
                 })
             }
 

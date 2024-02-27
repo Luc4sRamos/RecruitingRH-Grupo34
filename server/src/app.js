@@ -1,5 +1,6 @@
 const express = require("express")
 const app = express()
+const cors = require("cors")
 
 // Rutas de APIs
 const applicantsRoute = require("./routes/applicants")
@@ -8,6 +9,7 @@ const professionsRoute = require("./routes/professions")
 // Configuracion para CRUD
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
+app.use(cors())
 
 // Endpoints de APIs
 app.use("/applicants", applicantsRoute)
