@@ -5,6 +5,9 @@ const cors = require("cors")
 // Configuracion de variables de entorno .env
 require('dotenv').config()
 
+// Archivos estaticos
+app.use(express.static("assets"))
+
 // Rutas de APIs
 const applicantsRoute = require("./routes/applicants")
 const professionsRoute = require("./routes/professions")

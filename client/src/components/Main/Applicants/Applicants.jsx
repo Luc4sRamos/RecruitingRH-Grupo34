@@ -5,11 +5,15 @@ export function Applicants() {
     const [applicants, setApplicants] = useState()
 
     useEffect(() => {
-        fetch("http://localhost:3000/applicants")
-            .then(res => res.json())
-            .then(data => setApplicants(data.data.applicantsList))
+        apiApplicantsFetch()
     }, [])
-    console.log(applicants);
+
+    const apiApplicantsFetch = async () => {
+        const res = await fetch("http://localhost:3000/applicants")
+        const data = await res.json()
+        setApplicants(data.data.applicantsList)
+    }
+    
     return (
         <>
             {/* <!--Sección aspirantes--> */}
@@ -18,7 +22,7 @@ export function Applicants() {
                     <article className="person-boxes">
                         {
                             Array.isArray(applicants) && applicants.map((applicant, i) => 
-                                <Person key={applicant.name + i} image={applicant.photo} name={applicant.name} lastName={applicant.lastName} profession={applicant.profession} />
+                                <Person key={applicant.name + i} image={applicant.photo.url} name={applicant.name} lastName={applicant.lastName} profession={applicant.profession} />
                             )
                         }
                     </article>

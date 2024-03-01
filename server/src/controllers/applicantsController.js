@@ -27,7 +27,10 @@ const controller = {
                     urlLinkedin,
                     birthdate,
                     gender_id,
-                    photo,
+                    photo: {
+                        name: photo,
+                        url: `http://localhost:${process.env.PORT}/images/${photo}`
+                    },
                     profession: professionName
                 })
             }
@@ -49,7 +52,9 @@ const controller = {
     create: async (req, res) => {
         try {
             console.log(req.body)
+            console.log(req.file);
             const { name, lastName, dni, email, phoneNumber, urlLinkedin, birthdate, gender_id, photo, professions } = req.body
+            const file = req.file ?? {}
             const applicant = await Applicant.create({
                 name,
                 lastName,
@@ -59,7 +64,7 @@ const controller = {
                 urlLinkedin,
                 birthdate,
                 gender_id,
-                photo 
+                photo: file.filename ?? "defaultAvatar.png"
             })
 
             if (Array.isArray(professions)) {

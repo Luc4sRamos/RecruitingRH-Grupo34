@@ -3,13 +3,17 @@ import { useEffect, useState } from "react"
 
 export function  Professions () {
 
-    const [professions, setProfessions] = useState()
+    const [professions, setProfessionsAPI] = useState()
 
     useEffect(() => {
-        fetch("http://localhost:3000/professions")
-            .then(res => res.json())
-            .then(data => setProfessions(data.data.professionsList))
+        apiProfessionsFetch()
     }, [])
+
+    const apiProfessionsFetch = async () => {
+        const res = await fetch("http://localhost:3000/professions")
+        const data = await res.json()
+        setProfessionsAPI(data.data.professionsList)
+    }
 
     return (
         <>

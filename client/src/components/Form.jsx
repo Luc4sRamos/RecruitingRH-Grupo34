@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 
 export function Form () { 
     const [validated, setValidated] = useState("row g-2 needs-validation");
     const [professionsAPI, setProfessionsAPI] = useState()
+    const navigate = useNavigate()
 
     // values of inputs
     const [name, setName] = useState()
@@ -15,47 +17,50 @@ export function Form () {
     const [gender_id, setGender_id] = useState()
     const [professions, setProfessions] = useState()
     const [photo, setPhoto] = useState()
-    
 
     useEffect(() => {
-        fetch("http://localhost:3000/professions")
-            .then(res => res.json())
-            .then(data => setProfessionsAPI(data.data.professionsList))
+        apiProfessionsFetch()
     }, [])
+
+    const apiProfessionsFetch = async () => {
+        const res = await fetch("http://localhost:3000/professions")
+        const data = await res.json()
+        setProfessionsAPI(data.data.professionsList)
+    }
 
     
     const handleSubmit = (event) => {
+        event.preventDefault();
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
-        event.preventDefault();
         event.stopPropagation();
         setValidated("row g-2 needs-validation")
-        }
+        } 
+        
+        if (form.checkValidity()) {
+            const formData = new FormData();
+            formData.append("name", name)
+            formData.append("lastName", lastName)
+            formData.append("dni", dni)
+            formData.append("email", email)
+            formData.append("phoneNumber", phoneNumber)
+            formData.append("urlLinkedin", urlLinkedin)
+            formData.append("birthdate", birthdate)
+            formData.append("gender_id", gender_id)
+            formData.append("professions", professions)
+            formData.append("file", photo)
     
-        setValidated("row g-2 needs-validation was-validated");
-
-        const newApplicant = {
-            name,
-            lastName,
-            dni,
-            email,
-            phoneNumber,
-            urlLinkedin,
-            birthdate,
-            gender_id,
-            photo,
-            professions
+            fetch("http://localhost:3000/applicants/create", {
+                method: "POST",
+                body: formData
+            }).then(()=>{
+                console.log("informacion enviada con exito");
+                navigate("/applicants")
+            })
         }
-        fetch("http://localhost:3000/applicants/create", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(newApplicant)
-        }).then(()=>{
-            console.log("Formulario enviado con éxito");
-        })
+        setValidated("row g-2 needs-validation was-validated");
     };
+
     
 
     return (
@@ -64,7 +69,7 @@ export function Form () {
             <main className="content-wrap">
 
             <h2>Postulación de Aspirante</h2>
-            <form className={validated} onSubmit={handleSubmit} noValidate>
+            <form className={validated} onSubmit={handleSubmit} noValidate  >
                 <div className="col-md-6">
                     <label htmlFor="name" className="form-label">Nombre</label>
                     <input type="text" className="form-control" id="name" name="name" required minLength={2} maxLength={50} onChange={e => setName(e.target.value)}></input>
@@ -144,7 +149,7 @@ export function Form () {
                 </div>
                 <div className="col-md-6">
                     <label htmlFor="photo" className="form-label">Foto del aspirante *(opcional)</label>
-                    <input type="file" className="form-control" id="photo" name="photo" accept=".jpg, .jpeg, .png" onChange={e => setPhoto(e.target.files[0].name)}></input>
+                    <input type="file" className="form-control" id="photo" name="photo" accept=".jpg, .jpeg, .png" onChange={e => {setPhoto(e.target.files[0]); console.log(e.target.files[0]);}}></input>
                     <div className="invalid-feedback">
                         Debe ser .jpg, .jpeg o .png
                     </div>
