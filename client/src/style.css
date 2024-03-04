@@ -6,6 +6,13 @@
 img{
   width: 100%;
 }
+
+#imgPreview {
+  width: 250px;
+  height: 250px;
+  min-width: 200px;
+}
+
 body {
   color: #99a0b0;
   width: 100%;
@@ -412,6 +419,10 @@ body {
 }
 
 @media (max-width: 440px) {
+  #imgPreview {
+    width: 200px;
+    height: 200px;
+  }
   .menu-wrap {
     min-height: 160px;
     height: 160px;

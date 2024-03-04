@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react"
+import { getAllProfessions } from "../../services/getAllProfessions"
+import { Link } from "react-router-dom"
 
 
 export function  Professions () {
@@ -6,15 +8,14 @@ export function  Professions () {
     const [professions, setProfessionsAPI] = useState()
 
     useEffect(() => {
-        apiProfessionsFetch()
-    }, [])
-
-    const apiProfessionsFetch = async () => {
-        const res = await fetch("http://localhost:3000/professions")
-        const data = await res.json()
-        setProfessionsAPI(data.data.professionsList)
-    }
-
+        const fetchProfessions = async () => {
+            const professionsList = await getAllProfessions()
+            setProfessionsAPI(professionsList)
+        }
+        fetchProfessions()
+      }
+    , [])
+    
     return (
         <>
             {/*<!--Sección de profesiones--> */}
@@ -25,13 +26,26 @@ export function  Professions () {
                             aria-current="true">
                             Listado de Profesiones
                         </h4>
-                        {
-                            Array.isArray(professions) && professions.map((profession, i) => 
-                                <button key={profession.name + i} type="button" className="list-group-item list-group-item-action text-center">
-                                    {profession.name}
-                                </button>
-                            )
-                        }
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                <th scope="col" className="text-center">Profesión</th>
+                                <th scope="col" className="text-center">Aspirantes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {
+                                Array.isArray(professions) && professions.map((profession, i) => 
+                                <>
+                                            <tr>
+                                            <td className="text-center"><Link to={`/professions/${profession.id}`} key={profession.name + i} className="text-decoration-none">{profession.name}</Link></td>
+                                            <td className="text-center">{profession.totalApplicants}</td>
+                                            </tr>
+                                </>
+                                )
+                            }
+                            </tbody>
+                        </table>
 
                     </div>
                 </section>

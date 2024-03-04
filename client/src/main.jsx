@@ -4,6 +4,8 @@ import App from './App.jsx'
 import Postulation from './pages/Postulation.jsx'
 import ApplicantsPage from "./pages/ApplicantsPage.jsx"
 import ProfessionsPage from './pages/ProfessionsPage.jsx'
+import ProfessionDetailPage from './pages/ProfessionDetail.jsx'
+import ApplicantDetailPage from './pages/ApplicantDetail.jsx'
 import NotFound from './pages/NotFound.jsx'
 import { createBrowserRouter, RouterProvider, createRoutesFromElements, Route} from 'react-router-dom'
 
@@ -14,6 +16,8 @@ const router = createBrowserRouter(
       <Route path='/postulation' element={ <Postulation /> } />
       <Route path='/applicants' element={ <ApplicantsPage /> } />
       <Route path='/professions' element={ <ProfessionsPage /> } />
+      <Route path='/professions/:professionId' element={ <ProfessionDetailPage /> } />
+      <Route path='/applicants/:applicantId' element={ <ApplicantDetailPage /> } />
       <Route path='*' element={ <NotFound /> } />
     </>
   )

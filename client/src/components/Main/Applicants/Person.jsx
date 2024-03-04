@@ -1,13 +1,14 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faStar, faComment, faEnvelope } from '@fortawesome/free-solid-svg-icons'
+import { faStar, faCircleUser, faEnvelope } from '@fortawesome/free-solid-svg-icons'
+import { Link } from "react-router-dom"
 
-export function Person({image, name, lastName, profession}) {
+export function Person({id, image, name, lastName, profession}) {
 
     return (
         <>
             <div className="person-box shadow p-3 mb-5 bg-body-tertiary rounded">
                 <div className="box-avatar">
-                    <img src={image} alt="Gloria"></img> 
+                    <img src={image} alt=""></img> 
                 </div>
                 <div className="box-bio">
                     <h2 className="bio-name">{name} {lastName}</h2>
@@ -18,7 +19,7 @@ export function Person({image, name, lastName, profession}) {
                         <FontAwesomeIcon icon={faStar} />
                     </button>
                     <button>
-                        <FontAwesomeIcon icon={faComment} />
+                        <Link to={`/applicants/${id}`}> <FontAwesomeIcon icon={faCircleUser} /> </Link>
                     </button>
                     <button>
                         <FontAwesomeIcon icon={faEnvelope} />

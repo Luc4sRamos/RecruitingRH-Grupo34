@@ -5,6 +5,9 @@ const { uploadPhoto } = require("../middlewares/multer")
 
 // API de aspirantes
 router.get("/", controller.list)
+router.get("/:id", controller.detail)
+
+// POST
 router.post("/create", uploadPhoto.single("file"), controller.create)
 
 module.exports = router

@@ -1,18 +1,18 @@
 import { Person } from "./Person"
 import { useEffect, useState } from "react"
+import { getAllApplicants } from "../../../services/getAllApplicants"
 
 export function Applicants() {
     const [applicants, setApplicants] = useState()
 
     useEffect(() => {
-        apiApplicantsFetch()
-    }, [])
-
-    const apiApplicantsFetch = async () => {
-        const res = await fetch("http://localhost:3000/applicants")
-        const data = await res.json()
-        setApplicants(data.data.applicantsList)
-    }
+        const fetchProfessions = async () => {
+            const professionsList = await getAllApplicants()
+            setApplicants(professionsList)
+        }
+        fetchProfessions()
+      }
+    , [])
     
     return (
         <>
@@ -22,7 +22,7 @@ export function Applicants() {
                     <article className="person-boxes">
                         {
                             Array.isArray(applicants) && applicants.map((applicant, i) => 
-                                <Person key={applicant.name + i} image={applicant.photo.url} name={applicant.name} lastName={applicant.lastName} profession={applicant.profession} />
+                                <Person key={applicant.name + i} id={applicant.id} image={applicant.photo.url} name={applicant.name} lastName={applicant.lastName} profession={applicant.profession} />
                             )
                         }
                     </article>

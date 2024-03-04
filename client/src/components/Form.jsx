@@ -1,10 +1,20 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
+import { applicantExist } from "../validations/applicantExist";
+import { getAllProfessions } from "../services/getAllProfessions";
+import swal from "sweetalert"
 
 export function Form () { 
     const [validated, setValidated] = useState("row g-2 needs-validation");
     const [professionsAPI, setProfessionsAPI] = useState()
     const navigate = useNavigate()
+
+    const [button, setButton] = useState({title: "Enviar solicitud", color: "btn btn-primary" })
+    const [ifExist, setIfExist] = useState([])
+    const [imageSetting, setImageSetting] = useState({
+        class: "d-none",
+        src: ""
+    })
 
     // values of inputs
     const [name, setName] = useState()
@@ -19,25 +29,37 @@ export function Form () {
     const [photo, setPhoto] = useState()
 
     useEffect(() => {
-        apiProfessionsFetch()
-    }, [])
-
-    const apiProfessionsFetch = async () => {
-        const res = await fetch("http://localhost:3000/professions")
-        const data = await res.json()
-        setProfessionsAPI(data.data.professionsList)
-    }
+        const fetchProfessions = async () => {
+            const professionsList = await getAllProfessions()
+            setProfessionsAPI(professionsList)
+        }
+        fetchProfessions()
+      }
+    , [])
 
     
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
+        let appExist = []
         event.preventDefault();
         const form = event.currentTarget;
+        appExist = await applicantExist(dni, email)
         if (form.checkValidity() === false) {
-        event.stopPropagation();
-        setValidated("row g-2 needs-validation")
+            event.stopPropagation();
+            setValidated("row g-2 needs-validation")
         } 
         
         if (form.checkValidity()) {
+            if (appExist.length > 0) {
+                console.log(appExist);
+                await setIfExist(appExist)
+                swal({
+                    title: "Error",
+                    text: appExist[0],
+                    icon: "error",
+                    button: "Aceptar"
+                })
+                return appExist = []
+            }
             const formData = new FormData();
             formData.append("name", name)
             formData.append("lastName", lastName)
@@ -50,16 +72,42 @@ export function Form () {
             formData.append("professions", professions)
             formData.append("file", photo)
     
-            fetch("http://localhost:3000/applicants/create", {
+            await fetch("http://localhost:3000/applicants/create", {
                 method: "POST",
                 body: formData
-            }).then(()=>{
-                console.log("informacion enviada con exito");
-                navigate("/applicants")
             })
+
+            setButton({title: "Solicitud enviada con éxito!", color: "btn btn-success" });
+            setTimeout(()=>{
+                navigate("/applicants")
+            }, 2500)
         }
         setValidated("row g-2 needs-validation was-validated");
     };
+
+    const photoPreview = (e) => {
+        const file = e.target.files[0]
+
+        setPhoto(file); 
+        console.log(file); 
+
+        if (file) {
+            setImageSetting({
+                class: "d-flex flex-column mt-3 mb-3 rounded mx-auto justify-content-center",
+                src: URL.createObjectURL(file)
+            })
+        }
+    }
+
+    const deletePhotoInput = useRef(null)
+    const deletePhotoPreview = () => {
+        deletePhotoInput.current.value = ""
+        setImageSetting({
+            class: "d-none",
+            src: ""
+        })
+        console.log(deletePhotoInput);
+    }
 
     
 
@@ -69,6 +117,7 @@ export function Form () {
             <main className="content-wrap">
 
             <h2>Postulación de Aspirante</h2>
+            
             <form className={validated} onSubmit={handleSubmit} noValidate  >
                 <div className="col-md-6">
                     <label htmlFor="name" className="form-label">Nombre</label>
@@ -133,7 +182,7 @@ export function Form () {
                         Seleccione una opción.
                     </div>
                 </div>
-                <div className="col-md-6">
+                <div className="col-mb-3">
                     <label htmlFor="professions" className="form-label">Profesión</label>
                     <select className="form-select" id="professions" name="professions" required onChange={e => { console.log(e.target.value); setProfessions(e.target.value)}}>
                     <option selected disabled value="">Seleccione su Profesión</option>
@@ -147,11 +196,18 @@ export function Form () {
                         Seleccione una opción.
                     </div>
                 </div>
-                <div className="col-md-6">
-                    <label htmlFor="photo" className="form-label">Foto del aspirante *(opcional)</label>
-                    <input type="file" className="form-control" id="photo" name="photo" accept=".jpg, .jpeg, .png" onChange={e => {setPhoto(e.target.files[0]); console.log(e.target.files[0]);}}></input>
+                <div className="col-mb-3 d-flex flex-column">
+                    <label htmlFor="photo" className="form-label ">Foto del aspirante *(opcional)</label>
+                    <input type="file" ref={deletePhotoInput} className="form-control" id="photo" name="photo" accept=".jpg, .jpeg, .png" 
+                    onChange={photoPreview}>
+                    </input>
                     <div className="invalid-feedback">
                         Debe ser .jpg, .jpeg o .png
+                    </div>
+                    <div className={imageSetting.class}>
+                        <h5 className="align-self-center">Vista previa de imagen</h5>
+                        <img src={imageSetting.src} alt="" name="imgPreview" id="imgPreview" className="rounded-circle "></img>
+                        <button type="button" onClick={deletePhotoPreview} className="btn btn-danger mt-3">Descartar imagen</button>
                     </div>
                 </div>
                 <div className="col-12">
@@ -166,8 +222,11 @@ export function Form () {
                     </div>
                 </div>
                 <div className="col-12">
-                    <button className="btn btn-primary" type="submit" >Enviar solicitud</button>
+                    <button className={ button.color } type="submit" >{ button.title }</button>
                 </div>
+                <h5 className="ifExist pt-3 mb-2 text-danger text-center">
+                    {ifExist[0]}
+                </h5>
             </form>
 
             </main>

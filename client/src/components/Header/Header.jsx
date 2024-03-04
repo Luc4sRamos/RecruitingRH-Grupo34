@@ -22,13 +22,13 @@ export function Header () {
                     <section className='menu'>
                         <h3>Opciones</h3>
                         <ul className=''>
-                            <Link to={"/applicants"}>
+                            <Link to={"/applicants"} className='text-decoration-none'>
                                 <Navbar icon={faUser} title={"Aspirantes"} />
                             </Link>
-                            <Link to={"/professions"}>
+                            <Link to={"/professions"} className='text-decoration-none'>
                                 <Navbar icon={faList} title={"Profesiones"} />
                             </Link>
-                            <Link to={"/postulation"}>
+                            <Link to={"/postulation"} className='text-decoration-none'>
                                 <Navbar icon={faAddressCard} title={"Postulate Aquí"} />
                             </Link>
                         </ul>

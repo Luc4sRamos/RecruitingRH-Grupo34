@@ -3,6 +3,7 @@ import '../style.css'
 import { Header } from '../components/Header/Header';
 import { Search } from '../components/Search'; 
 import { Applicants } from '../components/Main/Applicants/Applicants'
+import { Footer } from '../components/Footer';
 
 function ApplicantsPage() {
 
@@ -13,6 +14,7 @@ function ApplicantsPage() {
         {/*<!--Sección contenido--> */}
         <main className="content-wrap">
             <Applicants />
+            <Footer />
         </main>
         {/* <!--Fin Sección contenido--> */}
       </div>

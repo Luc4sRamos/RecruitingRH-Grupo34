@@ -1,6 +1,7 @@
 import { Presale } from "./Presale" 
 import { Applicants } from "./Applicants/Applicants" 
 import { Professions } from "./Professions" 
+import { Footer } from "../Footer"
 
 
 export function Main () {
@@ -13,7 +14,7 @@ export function Main () {
                 <Presale />
                 <Applicants />
                 <Professions />
-                
+                <Footer />
             </main>
             {/* <!--Fin Sección contenido--> */}
         </>

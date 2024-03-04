@@ -31,7 +31,8 @@ const controller = {
                         name: photo,
                         url: `http://localhost:${process.env.PORT}/images/${photo}`
                     },
-                    profession: professionName
+                    profession: professionName,
+                    detail: `/applicants/${id}`
                 })
             }
             return res.status(200).json({
@@ -44,6 +45,51 @@ const controller = {
                     count: applicants.length,
                     applicantsList
                 } 
+            })
+        } catch (error) {
+            return res.json(error)
+        }
+    },
+    detail: async (req, res) => {
+        try {
+            const paramId = req.params.id
+            const applicant = await Applicant.findByPk(paramId, {
+                include: ["gender", { association:"applicant_profession", include: ["profession"]}]
+            })
+
+            const { id, name, lastName, dni, email, phoneNumber, urlLinkedin, birthdate, gender_id, photo, applicant_profession } = applicant
+
+            let professionName
+            for (const { profession } of applicant_profession) {
+                if (profession) {
+                    professionName = profession.name
+                }
+            }
+
+            return res.status(200).json({
+                meta: {
+                    status: 200,
+                    url: `/applicants/${paramId}`,
+                    message: `Applicant detail of: ${applicant.name} ${applicant.lastName}`
+                },
+                data: {
+                    applicant: {
+                        id,
+                        name,
+                        lastName,
+                        dni,
+                        email,
+                        phoneNumber,
+                        urlLinkedin,
+                        birthdate,
+                        gender_id,
+                        photo: {
+                            name: photo,
+                            url: `http://localhost:${process.env.PORT}/images/${photo}`
+                        },
+                        profession: professionName,
+                    }
+                }
             })
         } catch (error) {
             return res.json(error)

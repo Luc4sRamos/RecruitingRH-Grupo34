@@ -68,7 +68,10 @@ const controller = {
                         urlLinkedin,
                         birthdate,
                         gender_id,
-                        photo,
+                        photo: {
+                            name: photo,
+                            url: `http://localhost:${process.env.PORT}/images/${photo}`
+                        },
                         createdAt,
                         updatedAt
                     })

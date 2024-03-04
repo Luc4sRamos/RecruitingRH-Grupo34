@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPlus, faSearch } from '@fortawesome/free-solid-svg-icons'
 
@@ -16,7 +17,7 @@ export function Search() {
 
                 <div className="user-actions">
                     <button>
-                    <FontAwesomeIcon icon={ faUserPlus } className='iconSearch' />
+                    <Link to={"/postulation"} className='text-decoration-none'> <FontAwesomeIcon icon={ faUserPlus } className='iconSearch' /> </Link>
                     </button>
                 </div>
                 </section>
